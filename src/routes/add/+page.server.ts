@@ -1,5 +1,6 @@
 import * as db from '$lib/db.server';
 import { fail, redirect } from '@sveltejs/kit';
+import { purgeCache } from '@netlify/functions';
 
 export const actions = {
 	async default({ request, cookies }) {
@@ -58,6 +59,12 @@ export const actions = {
 
 		if (!(await db.emotes.upload(name, image, format, user))) {
 			return fail(500, { message: 'internal error while uploading emote' });
+		}
+
+		try {
+			await purgeCache();
+		} catch (e) {
+			console.warn('could not purge netlify cache:', e);
 		}
 
 		console.log(`${user.name} added the emote ${name} (${type}, ${format})`);
