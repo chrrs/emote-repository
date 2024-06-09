@@ -6,8 +6,7 @@ export async function GET({ setHeaders }) {
 
 	setHeaders({
 		'Netlify-CDN-Cache-Control': 'public, s-max-age=86400, must-revalidate',
-		'Cache-Control': 'public, max-age=0, must-revalidate',
-		'Cache-Tag': 'emotes'
+		'Cache-Control': 'public, max-age=0, must-revalidate'
 	});
 
 	return json({

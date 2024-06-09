@@ -12,7 +12,7 @@ export async function load() {
 }
 
 export const actions = {
-	async 'delete-emote'({ request, cookies }) {
+	async 'delete-emote'({ request, cookies, platform }) {
 		// We only want authenticated users to be able to delete emotes.
 		const user = await db.auth.getFromCookies(cookies);
 		if (!user) {
@@ -25,7 +25,10 @@ export const actions = {
 		const emote = await db.emotes.delete(user, emoteId);
 
 		try {
-			await purgeCache({ tags: ['emotes'] });
+			// @ts-expect-error Netlify types are weird.
+			const context = platform?.context;
+			const token = context?.clientContext?.custom?.purge_api_token;
+			await purgeCache({ token });
 		} catch (e) {
 			console.warn('could not purge netlify cache:', e);
 		}

@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { purgeCache } from '@netlify/functions';
 
 export const actions = {
-	async default({ request, cookies }) {
+	async default({ request, cookies, platform }) {
 		// We only want authenticated users to be able to upload emotes.
 		const user = await db.auth.getFromCookies(cookies);
 		if (!user) {
@@ -62,7 +62,10 @@ export const actions = {
 		}
 
 		try {
-			await purgeCache({ tags: ['emotes'] });
+			// @ts-expect-error Netlify types are weird.
+			const context = platform?.context;
+			const token = context?.clientContext?.custom?.purge_api_token;
+			await purgeCache({ token });
 		} catch (e) {
 			console.warn('could not purge netlify cache:', e);
 		}
