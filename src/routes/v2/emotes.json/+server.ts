@@ -5,7 +5,7 @@ export async function GET({ setHeaders }) {
 	const emotes = await db.emotes.all();
 
 	setHeaders({
-		'Netlify-CDN-Cache-Control': 'public, s-max-age=86400, must-revalidate',
+		'Netlify-CDN-Cache-Control': 'public, max-age=86400, must-revalidate',
 		'Cache-Control': 'public, max-age=0, must-revalidate'
 	});
 
