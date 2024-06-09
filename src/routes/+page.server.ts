@@ -25,7 +25,7 @@ export const actions = {
 		const emote = await db.emotes.delete(user, emoteId);
 
 		try {
-			await purgeCache();
+			await purgeCache({ tags: ['emotes'] });
 		} catch (e) {
 			console.warn('could not purge netlify cache:', e);
 		}

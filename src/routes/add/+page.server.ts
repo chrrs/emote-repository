@@ -62,7 +62,7 @@ export const actions = {
 		}
 
 		try {
-			await purgeCache();
+			await purgeCache({ tags: ['emotes'] });
 		} catch (e) {
 			console.warn('could not purge netlify cache:', e);
 		}
