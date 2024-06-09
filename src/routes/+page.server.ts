@@ -1,17 +1,7 @@
 import * as db from '$lib/db.server';
 import { fail, redirect } from '@sveltejs/kit';
 
-export async function load({ locals, url, cookies }) {
-	const accessToken = url.searchParams.get('access_token');
-	if (accessToken && !locals.user) {
-		if (!(await db.auth.exists(accessToken))) {
-			throw fail(401);
-		}
-
-		cookies.set('access_token', accessToken, { path: '/', maxAge: 60 * 60 * 24 * 7 });
-		return redirect(302, '/');
-	}
-
+export async function load() {
 	return {
 		emotes: (await db.emotes.allOrdered()).map((emote) => ({
 			url: db.emotes.getUrl(emote),
