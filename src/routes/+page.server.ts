@@ -1,9 +1,9 @@
 import * as db from '$lib/db.server';
 import { fail, redirect } from '@sveltejs/kit';
 
-export async function load({ url, cookies }) {
+export async function load({ locals, url, cookies }) {
 	const accessToken = url.searchParams.get('access_token');
-	if (accessToken) {
+	if (accessToken && !locals.user) {
 		if (!(await db.auth.exists(accessToken))) {
 			throw fail(401);
 		}
